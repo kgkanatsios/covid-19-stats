@@ -2,7 +2,13 @@
   <div id="app">
     <b-navbar toggleable="lg" type="dark" variant="danger" class="mb-4">
       <b-container>
-        <b-navbar-brand to="/">COVID19</b-navbar-brand>
+        <b-navbar-brand to="/" class="mr-3 d-flex align-content-center"
+          >CO<v-icon
+            name="brands/vuejs"
+            class="my-auto"
+            scale="1.25"
+          />ID19</b-navbar-brand
+        >
         <b-navbar-toggle target="nav-collapse"></b-navbar-toggle>
         <b-collapse id="nav-collapse" is-nav>
           <b-navbar-nav class="mx-auto">
@@ -21,6 +27,7 @@
         <b-navbar-brand
           class="mr-0 ml-3 d-flex align-content-center"
           href="https://github.com/kgkanatsios/covid-19-stats"
+          target="_blank"
           >GitHub <v-icon name="brands/github" class="my-auto ml-1" scale="1.25"
         /></b-navbar-brand>
       </b-container>

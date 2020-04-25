@@ -1,9 +1,30 @@
 <template>
   <div id="app">
-    <div id="nav">
-      <router-link to="/">Home</router-link> |
-      <router-link to="/about">About</router-link>
-    </div>
+    <b-navbar toggleable="lg" type="dark" variant="danger" class="mb-4">
+      <b-container>
+        <b-navbar-brand to="/">COVID19</b-navbar-brand>
+        <b-navbar-toggle target="nav-collapse"></b-navbar-toggle>
+        <b-collapse id="nav-collapse" is-nav>
+          <b-navbar-nav class="mx-auto">
+            <li class="nav-item">
+              <b-link to="/" :active="isActive" class="nav-link text-white"
+                >Home</b-link
+              >
+            </li>
+            <li class="nav-item">
+              <b-link to="/about" :active="isActive" class="nav-link text-white"
+                >About</b-link
+              >
+            </li>
+          </b-navbar-nav>
+        </b-collapse>
+        <b-navbar-brand
+          class="mr-0 ml-3 d-flex align-content-center"
+          href="https://github.com/kgkanatsios/covid-19-stats"
+          >GitHub <v-icon name="brands/github" class="my-auto ml-1" scale="1.25"
+        /></b-navbar-brand>
+      </b-container>
+    </b-navbar>
     <router-view />
   </div>
 </template>

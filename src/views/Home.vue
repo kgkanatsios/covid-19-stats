@@ -76,7 +76,7 @@
           </b-card-group>
         </b-col>
       </b-row>
-      <b-row class="justify-content-md-center">
+      <b-row class="justify-content-md-center mb-4">
         <b-col col md="6">
           <b-dropdown
             :text="currentCountry.name"
@@ -105,6 +105,11 @@
           </b-dropdown>
         </b-col>
       </b-row>
+      <b-row class="mb-4">
+        <b-col>
+          <line-chart :chart-data="chartData" :height="150"></line-chart>
+        </b-col>
+      </b-row>
     </b-container>
     <b-container v-else>
       <div class="d-flex justify-content-center">
@@ -118,6 +123,7 @@
 
 <script>
 import { mapActions, mapGetters } from "vuex";
+import LineChart from "@/charts/LineChart.js";
 
 export default {
   name: "Home",
@@ -128,6 +134,9 @@ export default {
       deaths: 0,
       date: null
     };
+  },
+  components: {
+    LineChart
   },
   methods: {
     ...mapActions({
@@ -142,7 +151,43 @@ export default {
       "countryList",
       "covidData",
       "covidAvailableStats"
-    ])
+    ]),
+    chartData: function() {
+      if (Object.entries(this.covidData).length === 0) {
+        return;
+      }
+      let confirmed = [];
+      let recovered = [];
+      let deaths = [];
+      Object.keys(this.covidData.result).forEach(covidDataKey => {
+        confirmed.push(this.covidData.result[covidDataKey].confirmed);
+        recovered.push(this.covidData.result[covidDataKey].recovered);
+        deaths.push(this.covidData.result[covidDataKey].deaths);
+      });
+      return {
+        labels: Object.keys(this.covidData.result),
+        datasets: [
+          {
+            label: "Confirmed Cases",
+            borderColor: "#000000",
+            backgroundColor: "rgba(0, 0, 0, 0.2)",
+            data: confirmed
+          },
+          {
+            label: "Recoveries",
+            borderColor: "#28a745",
+            backgroundColor: "rgba(40, 167, 69, 0.2)",
+            data: recovered
+          },
+          {
+            label: "Deaths",
+            borderColor: "#dc3545",
+            backgroundColor: "rgba(220, 53, 69, 0.2)",
+            data: deaths
+          }
+        ]
+      };
+    }
   },
   watch: {
     covidData: {
@@ -178,6 +223,7 @@ export default {
   created() {
     this.fetchCountries();
     this.fetchCovidData();
+    this.setCurrentCountry(["Global", null]);
   }
 };
 </script>

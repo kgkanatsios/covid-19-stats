@@ -13,14 +13,10 @@
         <b-collapse id="nav-collapse" is-nav>
           <b-navbar-nav class="mx-auto">
             <li class="nav-item">
-              <b-link to="/" :active="isActive" class="nav-link text-white"
-                >Home</b-link
-              >
+              <b-link to="/" class="nav-link text-white">Home</b-link>
             </li>
             <li class="nav-item">
-              <b-link to="/about" :active="isActive" class="nav-link text-white"
-                >About</b-link
-              >
+              <b-link to="/about" class="nav-link text-white">About</b-link>
             </li>
           </b-navbar-nav>
         </b-collapse>

@@ -1,43 +1,50 @@
 import Axios from "axios";
 
 const state = {
-  global: [],
-  country: []
+  data: {},
+  availableStats: true
 };
 const mutations = {
-  SET_GLOBAL(state, { globalData }) {
-    state.global = globalData;
+  SET_DATA(state, { data }) {
+    state.data = data;
   },
-  SET_COUNTRY(state, { countryData }) {
-    state.country = countryData;
+  SET_AVAILABLESTATS(state, { availableStats }) {
+    state.availableStats = availableStats;
   }
 };
 const actions = {
-  fetchGlobalData: ({ commit }) => {
-    Axios.get("https://covidapi.info/api/v1/global/count")
+  fetchCovidData: ({ commit }, countryName = null) => {
+    commit("SET_DATA", {
+      data: {}
+    });
+    Axios.get(
+      countryName == null
+        ? "https://covidapi.info/api/v1/global/count"
+        : "https://covidapi.info/api/v1/country/" + countryName
+    )
       .then(res => {
-        commit("SET_GLOBAL", {
-          globalData: res.data
+        commit("SET_DATA", {
+          data: res.data
+        });
+        commit("SET_AVAILABLESTATS", {
+          availableStats: true
         });
       })
-      .catch(error => console.log(error));
-  },
-  fetchCountryData: ({ commit }, countryName) => {
-    Axios.get("https://covidapi.info/api/v1/country/" + countryName)
-      .then(res => {
-        commit("SET_COUNTRY", {
-          countryData: res.data
-        });
-      })
-      .catch(error => console.log(error));
+      .catch(error => {
+        if (error.response.status == 404) {
+          commit("SET_AVAILABLESTATS", {
+            availableStats: false
+          });
+        }
+      });
   }
 };
 const getters = {
-  covidGlobal: state => {
-    return state.global;
+  covidData: state => {
+    return state.data;
   },
-  covidCountry: state => {
-    return state.country;
+  covidAvailableStats: state => {
+    return state.availableStats;
   }
 };
 export default {

@@ -11,6 +11,11 @@ const routes = [
     component: Home
   },
   {
+    path: "/country/:alpha3Code/:name",
+    name: "Country",
+    component: Home
+  },
+  {
     path: "/about",
     name: "About",
     // route level code-splitting

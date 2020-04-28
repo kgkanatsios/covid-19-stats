@@ -17,19 +17,12 @@
               currentCountry.name
             }}</span>
           </h3>
-          <h4 v-if="covidAvailableStats">{{ date }}</h4>
-          <b-alert
-            v-if="!covidAvailableStats"
-            show
-            dismissible
-            variant="danger"
-          >
-            Not available statistics for this country!
-          </b-alert>
+          <unavailable-alert v-if="!covidAvailableStats"></unavailable-alert>
         </b-col>
       </b-row>
       <b-row v-if="covidAvailableStats" class="mb-4">
         <b-col>
+          <h4>{{ date }}</h4>
           <cards
             :confirmed="confirmed"
             :recovered="recovered"
@@ -62,8 +55,10 @@
 
 <script>
 import { mapActions, mapGetters } from "vuex";
+
 import Cards from "@/components/Cards.vue";
 import Chart from "@/components/Chart.vue";
+import UnavailableAlert from "@/components/UnavailableAlert.vue";
 import CountriesDropdown from "@/components/countries/Dropdown.vue";
 
 export default {
@@ -79,7 +74,8 @@ export default {
   components: {
     Cards,
     CountriesDropdown,
-    Chart
+    Chart,
+    UnavailableAlert
   },
   methods: {
     ...mapActions({
@@ -125,7 +121,14 @@ export default {
   created() {
     this.fetchCountries();
     this.fetchCovidData();
-    this.setCurrentCountry(["Global", null]);
+    if (this.$router.currentRoute.name == "Country") {
+      this.setCurrentCountry([
+        this.$route.params.name,
+        this.$route.params.alpha3Code
+      ]);
+    } else {
+      this.setCurrentCountry(["Global", null]);
+    }
   }
 };
 </script>

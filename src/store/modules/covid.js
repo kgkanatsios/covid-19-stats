@@ -17,6 +17,9 @@ const actions = {
     commit("SET_DATA", {
       data: {}
     });
+    commit("SET_AVAILABLESTATS", {
+      availableStats: true
+    });
     Axios.get(
       countryName == null
         ? "https://covidapi.info/api/v1/global/count"
@@ -25,9 +28,6 @@ const actions = {
       .then(res => {
         commit("SET_DATA", {
           data: res.data
-        });
-        commit("SET_AVAILABLESTATS", {
-          availableStats: true
         });
       })
       .catch(error => {

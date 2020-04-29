@@ -16,6 +16,9 @@
               <b-link to="/" class="nav-link text-white">Home</b-link>
             </li>
             <li class="nav-item">
+              <b-link to="/map" class="nav-link text-white">Map</b-link>
+            </li>
+            <li class="nav-item">
               <b-link to="/about" class="nav-link text-white">About</b-link>
             </li>
           </b-navbar-nav>

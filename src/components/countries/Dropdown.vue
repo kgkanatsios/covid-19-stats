@@ -9,7 +9,7 @@
   >
     <b-dropdown-item
       @click="
-        setCurrentCountry(['Global', null]);
+        setCurrentCountry();
         updateBrowserUrl(['Global', null]);
       "
       >Global</b-dropdown-item
@@ -19,7 +19,7 @@
       v-for="(country, index) in countryList"
       :key="index"
       @click="
-        setCurrentCountry([country.name, country.alpha3Code]);
+        setCurrentCountry(country.alpha3Code);
         updateBrowserUrl([country.name, country.alpha3Code]);
       "
     >

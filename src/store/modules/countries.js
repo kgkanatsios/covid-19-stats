@@ -8,27 +8,37 @@ const state = {
   list: []
 };
 const mutations = {
-  SET_CURRENT_COUNTRY(state, { name, alpha3Code }) {
-    state.current.name = name;
-    state.current.alpha3Code = alpha3Code;
+  SET_CURRENT_COUNTRY(state, { alpha3Code }) {
+    let currentCountry = state.list.find(
+      country => country.alpha3Code == alpha3Code
+    );
+    if (currentCountry == null) {
+      state.current.name = "Global";
+      state.current.alpha3Code = null;
+    } else {
+      state.current.name = currentCountry.name;
+      state.current.alpha3Code = currentCountry.alpha3Code;
+    }
   },
   SET_COUNTRIES(state, { countries }) {
     state.list = countries;
   }
 };
 const actions = {
-  fetchCountries: ({ commit }) => {
+  fetchCountries: ({ commit, dispatch }, alpha3Code = null) => {
     Axios.get("https://restcountries.eu/rest/v2/all")
       .then(res => {
         commit("SET_COUNTRIES", {
           countries: res.data
         });
       })
+      .then(() => {
+        dispatch("setCurrentCountry", alpha3Code);
+      })
       .catch(error => console.log(error));
   },
-  setCurrentCountry: ({ commit }, [name, alpha3Code]) => {
+  setCurrentCountry: ({ commit }, alpha3Code = null) => {
     commit("SET_CURRENT_COUNTRY", {
-      name,
       alpha3Code
     });
   }

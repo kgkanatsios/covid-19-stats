@@ -119,16 +119,12 @@ export default {
     }
   },
   created() {
-    this.fetchCountries();
-    this.fetchCovidData();
     if (this.$router.currentRoute.name == "Country") {
-      this.setCurrentCountry([
-        this.$route.params.name,
-        this.$route.params.alpha3Code
-      ]);
+      this.fetchCountries(this.$route.params.alpha3Code);
     } else {
-      this.setCurrentCountry(["Global", null]);
+      this.fetchCountries();
     }
+    this.fetchCovidData();
   }
 };
 </script>

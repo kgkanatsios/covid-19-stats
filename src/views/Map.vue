@@ -16,13 +16,43 @@
         <b-col style="height:700px;">
           <l-map class="w-100 h-100 d-flex" :zoom="zoom" :center="center">
             <l-tile-layer :url="url"></l-tile-layer>
-            <l-marker
-              v-for="(country, index) in countryList"
+            <l-circle
+              v-for="(data, index) in mapData"
               :key="index"
-              :lat-lng="[country.latlng[0], country.latlng[1]]"
+              :lat-lng="[data.country.latlng[0], data.country.latlng[1]]"
+              :radius="radiusLimit(data.stats.confirmed)"
+              color="red"
+              fillColor="red"
+              :name="data.country.name"
             >
-              <l-popup>{{ country.name }}</l-popup>
-            </l-marker>
+              <l-popup
+                :lat-lng="[data.country.latlng[0], data.country.latlng[1]]"
+              >
+                <div class="text-center">
+                  <h6>{{ data.country.name }}</h6>
+                  <div>
+                    <div class="text-info">
+                      Confirmed:
+                      <span class="font-weight-bold">{{
+                        new Intl.NumberFormat().format(data.stats.confirmed)
+                      }}</span>
+                    </div>
+                    <div class="text-success">
+                      Recoveries:
+                      <span class="font-weight-bold">{{
+                        new Intl.NumberFormat().format(data.stats.recovered)
+                      }}</span>
+                    </div>
+                    <div class="text-danger">
+                      Deaths:
+                      <span class="font-weight-bold">{{
+                        new Intl.NumberFormat().format(data.stats.deaths)
+                      }}</span>
+                    </div>
+                  </div>
+                </div>
+              </l-popup>
+            </l-circle>
           </l-map>
         </b-col>
       </b-row>
@@ -32,17 +62,8 @@
 
 <script>
 import { mapActions, mapGetters } from "vuex";
-import { LMap, LTileLayer, LMarker, LPopup } from "vue2-leaflet";
+import { LMap, LTileLayer, LCircle, LPopup } from "vue2-leaflet";
 import "leaflet/dist/leaflet.css";
-
-import { Icon } from "leaflet";
-
-delete Icon.Default.prototype._getIconUrl;
-Icon.Default.mergeOptions({
-  iconRetinaUrl: require("leaflet/dist/images/marker-icon-2x.png"),
-  iconUrl: require("leaflet/dist/images/marker-icon.png"),
-  shadowUrl: require("leaflet/dist/images/marker-shadow.png")
-});
 
 export default {
   name: "Map",
@@ -57,19 +78,45 @@ export default {
   components: {
     LMap,
     LTileLayer,
-    LMarker,
+    LCircle,
     LPopup
   },
   methods: {
     ...mapActions({
-      fetchCountries: "fetchCountries"
-    })
+      fetchCountries: "fetchCountries",
+      fetchCovidLatestData: "fetchCovidLatestData"
+    }),
+    radiusLimit: function(radius) {
+      return radius < 20000 ? 20000 : radius;
+    }
   },
   computed: {
-    ...mapGetters(["currentCountry", "countryList"])
+    ...mapGetters(["currentCountry", "countryList", "covidLatestData"]),
+    mapData: function() {
+      if (Object.entries(this.covidLatestData).length === 0) {
+        return {};
+      }
+      const data = [];
+      Object.keys(this.covidLatestData.result).forEach(covidLatestDataKey => {
+        let alpha3Code = Object.keys(
+          this.covidLatestData.result[covidLatestDataKey]
+        );
+        let countryData = this.countryList.find(
+          country => country.alpha3Code == alpha3Code
+        );
+        if (countryData != null) {
+          data.push({
+            country: countryData,
+            stats: this.covidLatestData.result[covidLatestDataKey][alpha3Code]
+          });
+        }
+      });
+      return data;
+    }
   },
   created() {
     this.fetchCountries();
+    this.fetchCovidLatestData();
   }
 };
 </script>

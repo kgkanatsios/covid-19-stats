@@ -80,7 +80,6 @@ export default {
   methods: {
     ...mapActions({
       fetchCountries: "fetchCountries",
-      setCurrentCountry: "setCurrentCountry",
       fetchCovidData: "fetchCovidData"
     })
   },
@@ -123,8 +122,8 @@ export default {
       this.fetchCountries(this.$route.params.alpha3Code);
     } else {
       this.fetchCountries();
+      this.fetchCovidData();
     }
-    this.fetchCovidData();
   }
 };
 </script>

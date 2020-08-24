@@ -87,7 +87,7 @@ export default {
       fetchCovidLatestData: "fetchCovidLatestData"
     }),
     radiusLimit: function(radius) {
-      return radius < 20000 ? 20000 : radius;
+      return radius < 100000 ? 20000 : Math.round(radius / 5);
     }
   },
   computed: {
